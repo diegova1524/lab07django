@@ -1,0 +1,43 @@
+from django.db import models
+
+class Autor(models.Model):
+    nombre = models.CharField(max_length=200)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.nombre
+
+class Receta(models.Model):
+    titulo = models.CharField(max_length=100, unique=True)
+    ingredientes = models.TextField(help_text='Redacta los Ingredientes')
+    preparacion = models.TextField()
+    tiempo_registro = models.DateTimeField(auto_now=True)
+    autor = models.ForeignKey(Autor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.titulo
+    
+class Comentario(models.Model):
+    receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
+    texto = models.TextField(help_text=u'Tu comentario', verbose_name='Comentario')
+
+    def __str__(self):
+        return self.texto
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
+    # otros campos del usuario
+
+class Evento(models.Model):
+    nombre = models.CharField(max_length=100)
+    fecha = models.DateField()
+    organizador = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # Relación con Usuario
+    # otros campos del evento
+
+class RegistroEvento(models.Model):
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)  # Relación con Evento
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)  # Relación con Usuario
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    # otros campos del registro del evento
+
+# Create your models here.
